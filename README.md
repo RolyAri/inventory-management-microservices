@@ -19,7 +19,8 @@ Este proyecto implementa una arquitectura de microservicios usando **Spring Boot
 
 - **Java 17**  
 - **Spring Boot 3**  
-- **Spring Cloud (Eureka, Gateway, WebFlux)**  
+- **Spring Cloud (Eureka, Gateway, WebFlux)**
+- **Spring Boot Actuator** (health, métricas y monitoreo)    
 - **Keycloak (OAuth2, JWT)**  
 - **PostgreSQL / MySQL**  
 - **Kafka + Zookeeper**  
@@ -62,6 +63,9 @@ docker ps
 - **API Gateway** → [http://localhost:8081](http://localhost:8081)  
 - **Keycloak** → [http://localhost:8181](http://localhost:8181)  
 - **Kafka Broker** → `localhost:9092`  
+
+![eureka](https://github.com/user-attachments/assets/20502732-62e2-4a07-8fbf-cad9c75276e3)
+![keycloak8181](https://github.com/user-attachments/assets/7242d940-e527-4216-a85a-f951a11f7f86)
 
 ## 🚀 Cómo ejecutar  
 
