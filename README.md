@@ -18,8 +18,9 @@ Este proyecto implementa una arquitectura de microservicios usando **Spring Boot
 ## 🛠️ Tecnologías usadas  
 
 - **Java 17**  
-- **Spring Boot 3**  
-- **Spring Cloud (Eureka, Gateway, WebFlux)**
+- **Spring Boot 3**
+- **Spring Boot Webflux**
+- **Spring Cloud (Eureka, Gateway, Load Balancer)**
 - **Spring Boot Actuator** (health, métricas y monitoreo)    
 - **Keycloak (OAuth2, JWT)**  
 - **PostgreSQL / MySQL**  
