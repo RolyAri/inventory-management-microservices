@@ -74,8 +74,8 @@ docker ps
 
 1. Clonar repositorio:  
    ```bash
-   git clone https://github.com/RolyAri/inventory-management-microservices.git
-   cd inventory-management-microservices
+   git clone https://github.com/RolyAri/microservices-architecture.git
+   cd microservices-architecture
    ```
 
 2. Levantar infraestructura (DBs, Keycloak, Kafka):  
