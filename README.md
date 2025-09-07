@@ -8,7 +8,7 @@ Este proyecto implementa una arquitectura de microservicios usando **Spring Boot
 
 ### Componentes principales  
 - **Discovery Server (Eureka)** → Registro y descubrimiento de microservicios.  
-- **API Gateway (Spring Cloud Gateway)** → Entrada única al sistema.  
+- **API Gateway (Spring Cloud Gateway)** → Entrada única al sistema, con **balanceo de carga** automático hacia los microservicios registrados en Eureka.
 - **OAuth2 Server (Keycloak + PostgreSQL)** → Autenticación y autorización.  
 - **Product Microservice (Spring Boot + PostgreSQL)** → Gestión de productos.  
 - **Orders Microservice (Spring Boot + MySQL)** → Gestión de órdenes, resiliencia con **Resilience4j**.  
