@@ -46,13 +46,17 @@ admin / admin
      ```
    - **Web Origins**: /*
 
+![keycloak_client_configuration](https://github.com/user-attachments/assets/52cc6dd5-fe94-4bb7-be21-b15de6206d11)
+
 5. Guarda y copia el **Client Secret** generado. Este debe coincidir con la propiedad en el API Gateway:
+   
+![keycloak_client_secret](https://github.com/user-attachments/assets/3dc545c3-b028-4340-b241-4fe6147c40bb)
 
 ```properties
 spring.security.oauth2.client.registration.keycloak.client-secret=TU_CLIENT_SECRET
 ```
 
-![keycloak_client_configuration](https://github.com/user-attachments/assets/52cc6dd5-fe94-4bb7-be21-b15de6206d11)
+
 
 ---
 
@@ -69,15 +73,17 @@ spring.security.oauth2.client.registration.keycloak.client-secret=TU_CLIENT_SECR
 
 
 ## 5️⃣ Crear Roles
-1. En el menú de **Roles**, crear roles como `USER`, `ADMIN`.  
-2. Asignar los roles a los usuarios creados:
-   - `admin_user` → roles: **ADMIN** y **USER**  
-   - `basic_user` → roles: **USER**  
----
+1. En el menú de **Roles**, crear roles como `USER`, `ADMIN`.
 
 ![keycloak_realm_roles_configuration](https://github.com/user-attachments/assets/72aa97a1-ede8-4cc6-9d4e-c1e0863fc177)
-![keycloak_admin_user_configuration](https://github.com/user-attachments/assets/47b6d3d9-a579-4f34-b439-8521b676b7d7)
-![keycloak_basic_user_configuration](https://github.com/user-attachments/assets/8580e13b-a49e-4122-8047-2ef724bbc201)
+   
+2. Asignar los roles a los usuarios creados:
+   - `admin_user` → roles: **ADMIN** y **USER**  
+   - `basic_user` → roles: **USER**
+
+   ![keycloak_admin_user_configuration](https://github.com/user-attachments/assets/47b6d3d9-a579-4f34-b439-8521b676b7d7)
+   ![keycloak_basic_user_configuration](https://github.com/user-attachments/assets/8580e13b-a49e-4122-8047-2ef724bbc201)
+---
 
 
 ## 6️⃣ Probar el flujo OAuth2
@@ -86,7 +92,7 @@ spring.security.oauth2.client.registration.keycloak.client-secret=TU_CLIENT_SECR
    http://localhost:8080/api/product
    ```
    El Gateway redirigirá automáticamente a Keycloak para autenticación.
-2. Ingresa con el usuario `testuser`.  
+2. Ingresa con el usuario `admin_user`(Acceso a todos los endpoints) o `basic_user`.  
 3. Keycloak emitirá un **JWT token** y lo reenviará al API Gateway, que a su vez lo propagará a los microservicios gracias a:
 
 ```properties
