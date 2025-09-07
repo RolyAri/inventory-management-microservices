@@ -55,7 +55,8 @@ docker ps
 - Usuario admin: `admin`  
 - Password: `admin`  
 
-> Debes configurar un **realm** y un **cliente** en Keycloak para proteger los microservicios vía OAuth2.  
+> Debes configurar un **realm** y un **cliente** en Keycloak para proteger los microservicios vía OAuth2.
+👉 [Guía completa de configuración de Keycloak](./KEYCLOAK_CONFIGURATION.md)  
 
 ## 🌍 Accesos principales  
 
