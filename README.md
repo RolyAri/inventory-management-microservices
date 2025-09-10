@@ -88,5 +88,97 @@ docker ps
    mvn spring-boot:run
    ```
 
-4. Revisar el registro en **Eureka** y acceder a los endpoints vía **API Gateway**.  
+4. Revisar el registro en **Eureka** y acceder a los endpoints vía **API Gateway**.
+
+## 🔑 Autenticación con Keycloak en Postman  
+
+Para consumir los microservicios necesitas un **token JWT** emitido por Keycloak.  
+
+1. Abre **Postman** → crea una nueva colección o request.  
+2. En la pestaña **Authorization** selecciona:  
+   - **Auth Type**: `OAuth 2.0`
+   - **Token Name**: `kc_token` (puede ser cualquier nombre)  
+   - **Grant Type**: `Authorization Code`  
+   - **Callback URL**: `http://localhost:8080/login/oauth2/code/keycloak`  
+   - **Auth URL**: `http://localhost:8181/realms/microservices-realm/protocol/openid-connect/auth`  
+   - **Access Token URL**: `http://localhost:8181/realms/microservices-realm/protocol/openid-connect/token`  
+   - **Client ID**: `microservices_client`  
+   - **Client Secret**: `TU_SECRET`  
+   - **Scope**: `openid`
+  
+![postman_auth_config](https://github.com/user-attachments/assets/de4721d5-0fca-46ff-94fa-42c2d5c7a482)
+
+3. Haz clic en **Get New Access Token** → Postman abrirá Keycloak para login.
+   ![get_new_Access_token](https://github.com/user-attachments/assets/0ace6e04-7257-4224-854f-adf47549308d)
+
+5. Ingresa con el usuario creado en Keycloak (`admin_user` o `basic_user`).  
+6. Se generará un **token** y se guardará en Postman.
+  ![use_token](https://github.com/user-attachments/assets/cfbc8a00-6c8c-4180-80b6-569a7c28640a)
+
+👉 Desde ahí ya puedes invocar cualquier endpoint protegido con:  
+
+⚠️ **Nota:** Antes de autenticarte en Postman, prueba primero un endpoint `GET` y autenticate con keycloak en el navegador (ejemplo: [http://localhost:8080/api/product](http://localhost:8080/api/product)).  
+Esto asegura que las **cookies de sesión de Keycloak** se sincronicen entre el navegador y Postman, evitando errores al solicitar el token.
+
+![sync_cookies](https://github.com/user-attachments/assets/595b549e-3fd1-48d2-a767-2f4fc495ddff)
+
+![Test_api_chrome](https://github.com/user-attachments/assets/b57ce8c0-fd00-44f9-9264-862fede84658)
+
+![response_Test_api](https://github.com/user-attachments/assets/d63f26cc-a9cb-49fe-90c6-36c92d642094)
+
+## 📬 Postman Collection  
+
+Para probar los endpoints de los microservicios, puedes importar la siguiente colección en **Postman**:  
+
+👉 [Descargar colección de Postman](./MICROSERVICIOS.postman_collection.json)  
+
+1. Abre Postman.  
+2. Ve a **Importar** → selecciona el archivo `MICROSERVICIOS.postman_collection.json`.  
+3. Ejecuta las requests usando los endpoints expuestos en el **API Gateway**.
+
+## 📬 Endpoints
+
+### 🔹 Orders Service
+| Método | Endpoint       | Descripción             | Ejemplo Body |
+|--------|----------------|-------------------------|--------------|
+| GET    | `/api/order`   | Listar todas las órdenes | - |
+| POST   | `/api/order`   | Crear una nueva orden    | ```json
+{
+  "orderItems": [
+    {
+      "sku": "000001",
+      "price": 13500,
+      "quantity": 1
+    }
+  ]
+}
+``` |
+
+### 🔹 Inventory Service
+| Método | Endpoint                  | Descripción               |
+|--------|---------------------------|---------------------------|
+| GET    | `/api/inventory/{sku}`    | Obtener stock por producto (ej: `/api/inventory/000004`) |
+
+### 🔹 Products Service
+| Método | Endpoint         | Descripción           | Ejemplo Body |
+|--------|------------------|-----------------------|--------------|
+| GET    | `/api/product`   | Listar todos los productos | - |
+| POST   | `/api/product`   | Crear un nuevo producto   | ```json
+{
+  "sku": "000001",
+  "name": "Laptop Lenovo IdeaPad 3",
+  "description": "Laptop de 15.6 pulgadas con procesador AMD Ryzen 5, 8GB de RAM y 512GB SSD. Ideal para trabajo y estudio.",
+  "price": 13500,
+  "status": true
+}
+``` |
+
+---
+
+⚠️ **Nota:** Todos los endpoints requieren autenticación vía **Keycloak (OAuth2/JWT)**.  
+La colección de Postman ya incluye la configuración con:  
+- `clientId`: `microservices_client`  
+- `clientSecret`: `UGLRlEUD0SUpu8aclubzc8YOI3BVubg5`  
+- `authUrl`: `http://localhost:8181/realms/microservices-realm/protocol/openid-connect/auth`  
+- `tokenUrl`: `http://localhost:8181/realms/microservices-realm/protocol/openid-connect/token`  
 
