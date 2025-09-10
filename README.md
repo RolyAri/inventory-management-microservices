@@ -138,47 +138,44 @@ Para probar los endpoints de los microservicios, puedes importar la siguiente co
 
 ## 📬 Endpoints
 
-### 🔹 Orders Service
-| Método | Endpoint       | Descripción             | Ejemplo Body |
-|--------|----------------|-------------------------|--------------|
-| GET    | `/api/order`   | Listar todas las órdenes | - |
-| POST   | `/api/order`   | Crear una nueva orden    | ```json
-{
-  "orderItems": [
-    {
-      "sku": "000001",
-      "price": 13500,
-      "quantity": 1
-    }
-  ]
-}
-``` |
+### Orders Service
+- GET `/api/order` → Listar todas las órdenes  
+- POST `/api/order` → Crear una nueva orden  
+  ```json
+  {
+    "orderItems": [
+      {
+        "sku": "000001",
+        "price": 13500,
+        "quantity": 1
+      }
+    ]
+  }
+  ```
 
-### 🔹 Inventory Service
-| Método | Endpoint                  | Descripción               |
-|--------|---------------------------|---------------------------|
-| GET    | `/api/inventory/{sku}`    | Obtener stock por producto (ej: `/api/inventory/000004`) |
+### Inventory Service
+- GET `/api/inventory/{sku}` → Obtener stock por producto  
+  Ejemplo: `/api/inventory/000004`
 
-### 🔹 Products Service
-| Método | Endpoint         | Descripción           | Ejemplo Body |
-|--------|------------------|-----------------------|--------------|
-| GET    | `/api/product`   | Listar todos los productos | - |
-| POST   | `/api/product`   | Crear un nuevo producto   | ```json
-{
-  "sku": "000001",
-  "name": "Laptop Lenovo IdeaPad 3",
-  "description": "Laptop de 15.6 pulgadas con procesador AMD Ryzen 5, 8GB de RAM y 512GB SSD. Ideal para trabajo y estudio.",
-  "price": 13500,
-  "status": true
-}
-``` |
+### Products Service
+- GET `/api/product` → Listar todos los productos  
+- POST `/api/product` → Crear un nuevo producto  
+  ```json
+  {
+    "sku": "000001",
+    "name": "Laptop Lenovo IdeaPad 3",
+    "description": "Laptop de 15.6 pulgadas con procesador AMD Ryzen 5, 8GB de RAM y 512GB SSD. Ideal para trabajo y estudio.",
+    "price": 13500,
+    "status": true
+  }
+  ```
 
 ---
 
-⚠️ **Nota:** Todos los endpoints requieren autenticación vía **Keycloak (OAuth2/JWT)**.  
+⚠️ Nota: Todos los endpoints requieren autenticación vía **Keycloak (OAuth2/JWT)**.  
 La colección de Postman ya incluye la configuración con:  
-- `clientId`: `microservices_client`  
-- `clientSecret`: `UGLRlEUD0SUpu8aclubzc8YOI3BVubg5`  
-- `authUrl`: `http://localhost:8181/realms/microservices-realm/protocol/openid-connect/auth`  
-- `tokenUrl`: `http://localhost:8181/realms/microservices-realm/protocol/openid-connect/token`  
+- clientId: `microservices_client`  
+- clientSecret: `TU_SECRET`  
+- authUrl: `http://localhost:8181/realms/microservices-realm/protocol/openid-connect/auth`  
+- tokenUrl: `http://localhost:8181/realms/microservices-realm/protocol/openid-connect/token`  
 
