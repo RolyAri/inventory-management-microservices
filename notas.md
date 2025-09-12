@@ -1,6 +1,6 @@
-# Maven build
+### Maven build
 
-./mvnw clean package -DskipTests
+      ./mvnw clean package -DskipTests
 
 ### Docker (Cmd)
 
@@ -12,7 +12,11 @@
 
       docker images
 
+      for Linux
+
       docker build -t products-service:latest . -f ./products-service/Dockerfile
+
+      for Windows
 
       docker build -t products-service:latest . -f .\products-service\Dockerfile
 
@@ -28,11 +32,22 @@
 
       docker system prune -a --volumes
 
-`Docker compose`
+      Docker compose
 
-      docker compose up compose.yaml -d
+      docker compose up -f compose.yaml -d
 
-      docker compose down compose.yaml -v
+      docker compose down -f compose.yaml -v
 
-docker compose -f compose.yaml up -d config-server eureka-server zipkin msvc-products msvc-items
+### Orden
 
+      docker compose up -d discovery-server
+
+      docker compose up -d keycloak
+
+      Follow KEYCLOAK_CONFIGURATION.md
+
+      docker compose up -d api-gateway
+
+      docker compose up -d inventory-service notification-service orders-service products-service kafka
+
+      docker logs -f discovery-server
