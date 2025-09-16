@@ -1,0 +1,30 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: microservices-config
+data:
+  DISCOVERY_URL: "http://discovery-server:8761/eureka"
+  DISCOVERY_AUTH_URL: "http://eureka:<password>@discovery-server:8761/eureka"
+  KEYCLOAK_ISSUER_URI: "http://keycloak:8181/realms/microservices-realm"
+  KEYCLOAK_JWT_URI: "http://keycloak:8181/realms/microservices-realm/protocol/openid-connect/certs"
+  INVENTORY_SPRING_DATASOURCE_JDBC_URL: "jdbc:postgresql://db-inventory:5432/ms_inventory"
+  ORDERS_SPRING_DATASOURCE_JDBC_URL: "jdbc:mysql://db-orders:3306/ms_orders?useSSL=false&allowPublicKeyRetrieval=true"
+  PRODUCTS_SPRING_DATASOURCE_JDBC_URL: "jdbc:postgresql://db-products:5432/ms_products"
+  KAFKA_BOOTSTRAP_SERVERS: "kafka:9092"
+
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: microservices-secrets
+type: Opaque
+stringData:
+  SPRING_SECURITY_USER_NAME: eureka
+  SPRING_SECURITY_USER_PASSWORD: <password>
+  KEYCLOAK_ADMIN: admin
+  KEYCLOAK_ADMIN_PASSWORD: <password>
+  POSTGRES_USER: postgres
+  POSTGRES_PASSWORD: <password>
+  MYSQL_USER: root
+  MYSQL_PASSWORD: <password>
+  MYSQL_ROOT_PASSWORD: <password>

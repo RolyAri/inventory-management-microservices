@@ -1,6 +1,7 @@
 package com.rolydev.products_service.model.entities;
 
 import jakarta.persistence.*;
+//import jakarta.validation.constraints.*;
 import lombok.*;
 
 @Entity
@@ -16,6 +17,10 @@ public class Product {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String sku;
+
+    // @NotBlank
+    // @Pattern(regexp = "^[A-Za-zÁÉÍÓÚáéíóúÑñ.'\\- ]+$", message = "Nombre inválido (solo letras, espacios, puntos o guiones)")
+    // @Column
     private String name;
     private String description;
     private Double price;

@@ -1,38 +1,51 @@
-# Maven build
-
+### Maven build
+```bash
 ./mvnw clean package -DskipTests
+```
 
-### Docker (Cmd)
+### Docker + DockerHub
+```bash
+Docker
 
-      docker login -u {docker-registry-username}
+for Windows
 
-      Token: dckr_pat_x ...
+docker build -t products-service:latest . -f .\products-service\Dockerfile
+...
+docker images
 
-      docker logout
+for Linux
+docker build -t products-service:latest . -f ./products-service/Dockerfile
 
-      docker images
+docker scout cves <IMAGE_ID>
+docker rmi <IMAGE_ID>
+docker image prune -a
+docker system prune -a --volumes
 
-      docker build -t products-service:latest . -f ./products-service/Dockerfile
+Docker compose
 
-      docker build -t products-service:latest . -f .\products-service\Dockerfile
+Orden
+1. docker compose up -d discovery-server
+2. docker compose up -d keycloak
+3. Follow KEYCLOAK_CONFIGURATION.md
+4. docker compose up -d api-gateway
+5. docker compose up -d inventory-service notification-service orders-service products-service kafka
+6. docker logs -f discovery-server
 
-      docker scout cves <IMAGE_ID>
+docker compose up -f compose.yaml -d
+docker compose down -f compose.yaml -v
 
-      docker tag products-service <dockerhub_username>/products-service
+DockerHub
 
-      docker push <dockerhub_username>/products-service
+docker login -u {your-dockerhub}
+Token: dckr_pat_x ...
+docker logout
 
-      docker rmi <IMAGE_ID>
+docker tag products-service <your-dockerhub>/products-service
+docker push <your-dockerhub>/products-service
+```
 
-      docker image prune -a
-
-      docker system prune -a --volumes
-
-`Docker compose`
-
-      docker compose up compose.yaml -d
-
-      docker compose down compose.yaml -v
-
-docker compose -f compose.yaml up -d config-server eureka-server zipkin msvc-products msvc-items
-
+### Kubernetes
+```bash
+kubectl apply -f discovery-server.yaml ...
+kubectl apply -f .
+```
