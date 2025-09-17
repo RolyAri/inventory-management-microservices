@@ -49,3 +49,9 @@ docker push <your-dockerhub>/products-service
 kubectl apply -f discovery-server.yaml ...
 kubectl apply -f .
 ```
+
+### Jaeger
+```bash
+minikube service jaeger --url
+# minikube service jaeger-query
+```

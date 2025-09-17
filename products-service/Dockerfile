@@ -7,19 +7,22 @@ COPY ./pom.xml /app
 COPY ./products-service/.mvn ./.mvn
 COPY ./products-service/mvnw .
 COPY ./products-service/pom.xml .
-RUN ./mvnw clean package -Dmaven.test.skip -Dmaven.main.skip -Dspring-boot.repackage.skip && rm -r ./target/
-#RUN ./mvnw dependency:go-offline
+#RUN ./mvnw clean package -Dmaven.test.skip -Dmaven.main.skip -Dspring-boot.repackage.skip && rm -r ./target/
+RUN ./mvnw dependency:go-offline -B
 COPY ./products-service/src ./src
-RUN ./mvnw clean package -DskipTests
+RUN ./mvnw clean package -DskipTests -B
 #COPY . .
 
 # Stage 2: Runtime
-#FROM gcr.io/distroless/java17-debian12 # Without create non-root user layer
-FROM eclipse-temurin:17-jre-alpine
+# Without to create non-root user layer
+#FROM gcr.io/distroless/java17-debian12
+# Needs to create a non-root user layer
+FROM bellsoft/liberica-runtime-container:jre-17-musl
+#FROM eclipse-temurin:17-jre-alpine
 
 WORKDIR /app
 
-# Create non-root user
+# Create non-root user layer
 RUN addgroup -S spring && adduser -S spring -G spring
 USER spring
 
@@ -30,4 +33,5 @@ COPY --from=builder /app/products-service/target/*.jar app.jar
 #EXPOSE 800x
 
 # Command to run the application
-ENTRYPOINT ["java", "-XX:+UseContainerSupport", "-XX:MaxRAMPercentage=75.0", "-jar", "app.jar"]
+ENTRYPOINT ["java", "-XX:+ExitOnOutOfMemoryError", "-XX:MaxRAMPercentage=75.0", "-jar", "app.jar"]
+#ENTRYPOINT ["java", "-XX:+UseContainerSupport", "-XX:MaxRAMPercentage=75.0", "-jar", "app.jar"]

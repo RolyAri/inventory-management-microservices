@@ -7,6 +7,8 @@ import com.rolydev.products_service.repositories.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 
 import java.util.List;
 
@@ -15,7 +17,9 @@ import java.util.List;
 @Slf4j
 public class ProductService {
     private final ProductRepository productRepository;
-    public void addProduct(ProductRequest productRequest){
+
+    @CacheEvict(value = "products", allEntries = true)
+    public void addProduct(ProductRequest productRequest) {
         var product = Product.builder()
                 .sku(productRequest.getSku())
                 .name(productRequest.getName())
@@ -28,11 +32,14 @@ public class ProductService {
 
         log.info("Product added: {}", product);
     }
+    
+    @Cacheable(value = "products")
     public List<ProductResponse> getAllProducts() {
         var products = productRepository.findAll();
 
         return products.stream().map(this::mapToProductResponse).toList();
     }
+
     private ProductResponse mapToProductResponse(Product product){
         return ProductResponse.builder()
                 .id(product.getId())

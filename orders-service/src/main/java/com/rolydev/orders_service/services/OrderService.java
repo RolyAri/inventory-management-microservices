@@ -11,6 +11,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 
 import java.util.List;
 import java.util.UUID;
@@ -20,8 +22,9 @@ import java.util.UUID;
 public class OrderService {
     private final OrderRepository orderRepository;
     private final WebClient.Builder webClientBuilder;
-    private final KafkaTemplate<String,String> kafkaTemplate;
+    private final KafkaTemplate<String, String> kafkaTemplate;
 
+    @CacheEvict(value = "orders", allEntries = true)
     public OrderResponse placeOrder(OrderRequest orderRequest) {
 
         //check for inventory
@@ -33,7 +36,7 @@ public class OrderService {
                 .bodyToMono(BaseResponse.class)
                 .block();
 
-        if (result != null && !result.hasErrors()){
+        if (result != null && !result.hasErrors()) {
             Order order = new Order();
             order.setOrderNumber(UUID.randomUUID().toString());
             order.setOrderItems(orderRequest.getOrderItems().stream()
@@ -42,8 +45,8 @@ public class OrderService {
             var savedOrder = this.orderRepository.save(order);
             //TODO: Send message to order topic
             this.kafkaTemplate.send("orders-topic", JsonUtils.toJson(
-                    new OrderEvent(savedOrder.getOrderNumber(), savedOrder.getOrderItems().size(), OrderStatus.PLACED)
-            ));
+                    new OrderEvent(savedOrder.getOrderNumber(), savedOrder.getOrderItems().size(),
+                            OrderStatus.PLACED)));
 
             return mapOrderToOrderResponse(savedOrder);
         } else {
@@ -51,6 +54,7 @@ public class OrderService {
         }
     }
 
+    @Cacheable(value = "orders")
     public List<OrderResponse> getAllOrders(){
         List<Order> orders = this.orderRepository.findAll();
         return orders.stream().map(this::mapOrderToOrderResponse).toList();

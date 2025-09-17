@@ -7,14 +7,12 @@ COPY ./pom.xml /app
 COPY ./inventory-service/.mvn ./.mvn
 COPY ./inventory-service/mvnw .
 COPY ./inventory-service/pom.xml .
-RUN ./mvnw clean package -Dmaven.test.skip -Dmaven.main.skip -Dspring-boot.repackage.skip && rm -r ./target/
-#RUN ./mvnw dependency:go-offline
+RUN ./mvnw dependency:go-offline -B
 COPY ./inventory-service/src ./src
-RUN ./mvnw clean package -DskipTests
-#COPY . .
+RUN ./mvnw clean package -DskipTests -B
 
 # Stage 2: Runtime
-FROM eclipse-temurin:17-jre-alpine
+FROM bellsoft/liberica-runtime-container:jre-17-musl
 
 WORKDIR /app
 
@@ -29,4 +27,4 @@ COPY --from=builder /app/inventory-service/target/*.jar app.jar
 #EXPOSE 800x
 
 # Command to run the application
-ENTRYPOINT ["java", "-XX:+UseContainerSupport", "-XX:MaxRAMPercentage=75.0", "-jar", "app.jar"]
+ENTRYPOINT ["java", "-XX:+ExitOnOutOfMemoryError", "-XX:MaxRAMPercentage=75.0", "-jar", "app.jar"]

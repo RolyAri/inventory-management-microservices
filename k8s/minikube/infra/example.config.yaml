@@ -12,6 +12,15 @@ data:
   PRODUCTS_SPRING_DATASOURCE_JDBC_URL: "jdbc:postgresql://db-products:5432/ms_products"
   KAFKA_BOOTSTRAP_SERVERS: "kafka:9092"
 
+  # 🔹 Redis (para cache/sesiones)
+  REDIS_HOST: "redis"
+  REDIS_PORT: "6379"
+
+  # 🔹 OpenTelemetry (Collector dentro del cluster)
+  OTEL_EXPORTER_OTLP_ENDPOINT: "http://otel-collector:4317"
+  OTEL_TRACES_SAMPLER: "parentbased_always_on"
+  OTEL_RESOURCE_ATTRIBUTES: "service.namespace=microservices"
+
 ---
 apiVersion: v1
 kind: Secret
@@ -28,3 +37,5 @@ stringData:
   MYSQL_USER: root
   MYSQL_PASSWORD: <password>
   MYSQL_ROOT_PASSWORD: <password>
+  # 🔹 Redis (si configuras password, opcional)
+  REDIS_PASSWORD: ""

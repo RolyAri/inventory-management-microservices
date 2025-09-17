@@ -74,7 +74,9 @@ services:
     env_file:
       - .env
     environment:
-      DISCOVERY_URL: ${DISCOVERY_URL}      
+      DISCOVERY_URL: ${DISCOVERY_URL}
+      OTEL_EXPORTER_OTLP_ENDPOINT: ${OTEL_EXPORTER_OTLP_ENDPOINT}
+      OTEL_RESOURCE_ATTRIBUTES: ${OTEL_RESOURCE_ATTRIBUTES}    
     ports:
       - ${GATEWAY_PORT}:${GATEWAY_PORT}
     restart: unless-stopped
@@ -90,6 +92,9 @@ services:
       dockerfile: ./inventory-service/Dockerfile
     env_file:
       - .env
+    environment:
+      OTEL_EXPORTER_OTLP_ENDPOINT: ${OTEL_EXPORTER_OTLP_ENDPOINT}
+      OTEL_RESOURCE_ATTRIBUTES: ${OTEL_RESOURCE_ATTRIBUTES}
     # ports:
     #   - ${PORT}:${PORT}
     restart: unless-stopped
@@ -130,6 +135,9 @@ services:
       dockerfile: ./notification-service/Dockerfile
     env_file:
       - .env
+    environment:
+      OTEL_EXPORTER_OTLP_ENDPOINT: ${OTEL_EXPORTER_OTLP_ENDPOINT}
+      OTEL_RESOURCE_ATTRIBUTES: ${OTEL_RESOURCE_ATTRIBUTES}
     # ports:
     #   - ${PORT}:${PORT}
     restart: unless-stopped
@@ -148,6 +156,9 @@ services:
       dockerfile: ./orders-service/Dockerfile
     env_file:
       - .env
+    environment:
+      OTEL_EXPORTER_OTLP_ENDPOINT: ${OTEL_EXPORTER_OTLP_ENDPOINT}
+      OTEL_RESOURCE_ATTRIBUTES: ${OTEL_RESOURCE_ATTRIBUTES}
     # ports:
     #   - ${PORT}:${PORT}
     restart: unless-stopped
@@ -188,9 +199,9 @@ services:
       dockerfile: ./products-service/Dockerfile
     env_file:
       - .env
-    # environment:
-    #   SPRING_SECURITY_USER_NAME: ${SPRING_SECURITY_USER_NAME}
-    #   SPRING_SECURITY_USER_PASSWORD: ${SPRING_SECURITY_USER_PASSWORD}
+    environment:
+      OTEL_EXPORTER_OTLP_ENDPOINT: ${OTEL_EXPORTER_OTLP_ENDPOINT}
+      OTEL_RESOURCE_ATTRIBUTES: ${OTEL_RESOURCE_ATTRIBUTES}
     # ports:
     #   - ${PORT}:{PORT}
     restart: unless-stopped
@@ -265,6 +276,39 @@ services:
       ZOOKEEPER_TICK_TIME: ${ZOOKEEPER_TICK_TIME}
       ZOOKEEPER_DATA_DIR: ${ZOOKEEPER_DATA_DIR}
       ZOOKEEPER_DATA_LOG_DIR: ${ZOOKEEPER_DATA_LOG_DIR}
+  
+  redis:
+    image: redis:7-alpine
+    container_name: redis
+    ports:
+#      - "6379:6379"
+      - "${REDIS_PORT}:${REDIS_PORT}"
+    volumes:
+      - redis_data:/data
+    restart: unless-stopped
+
+  jaeger:
+    image: jaegertracing/all-in-one:1.37
+    container_name: jaeger
+    ports:
+#      - "16686:16686" # UI
+#      - "14250:14250" # Collector gRPC
+      - "${JAEGER_UI_PORT}:${JAEGER_UI_PORT}" # UI
+      - "${JAEGER_COL_PORT}:${JAEGER_COL_PORT}" # Collector gRPC
+    restart: unless-stopped
+
+  otel-collector:
+    image: otel/opentelemetry-collector-contrib:latest
+    command: [ "--config=/etc/otel/config.yaml" ]
+    volumes:
+      - ./otel-collector-config.yaml:/etc/otel/config.yaml
+    ports:
+      #      - "4317:4317"   # OTLP gRPC
+      #      - "4318:4318"   # OTLP HTTP
+      - "${OTEL_GRCP_PORT}:${OTEL_GRCP_PORT}" # OTLP gRPC
+      - "${OTEL_HTTP_PORT}:${OTEL_HTTP_PORT}" # OTLP HTTP
+    depends_on:
+      - jaeger
 
 volumes:
   inventory-pgdata:
@@ -272,6 +316,7 @@ volumes:
   products-pgdata:
   keycloak-pgdata:
   kafka_data:
+  redis_data:
 
 networks:
   spring:

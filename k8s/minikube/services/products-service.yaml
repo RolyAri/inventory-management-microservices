@@ -32,6 +32,12 @@ spec:
                 name: microservices-config
             - secretRef:
                 name: microservices-secrets
+          env:
+            - name: OTEL_EXPORTER_OTLP_ENDPOINT
+              value: ${OTEL_EXPORTER_OTLP_ENDPOINT}
+#              value: "http://otel-collector:4317"
+            - name: OTEL_RESOURCE_ATTRIBUTES
+              value: "service.name=products-service"
           resources:
             requests:
               cpu: "100m"
