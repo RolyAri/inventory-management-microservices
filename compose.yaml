@@ -239,43 +239,53 @@ services:
     container_name: kafka
     image: "confluentinc/cp-kafka:${KAFKA_VERSION}"
     restart: unless-stopped
-    depends_on:
-      - zookeeper
-    # ports:
-    #   - "${KAFKA_PORT}:${KAFKA_PORT}"
+#    depends_on:
+#      - zookeeper
+#    ports:
+#      - "${KAFKA_PORT}:${KAFKA_PORT}"
     #   - "${KAFKA_INTERNAL_PORT}:${KAFKA_INTERNAL_PORT}"
     networks:
       - spring
     env_file:
       - .env
     environment:
-      KAFKA_BROKER_ID: ${KAFKA_BROKER_ID}
-      KAFKA_ZOOKEEPER_CONNECT: ${KAFKA_ZOOKEEPER_CONNECT}
-      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: ${KAFKA_LISTENER_SECURITY_PROTOCOL_MAP}
-      KAFKA_ADVERTISED_LISTENERS: ${KAFKA_ADVERTISED_LISTENERS}
+      # KRaft settings
+      KAFKA_PROCESS_ROLES: ${KAFKA_PROCESS_ROLES}
+      KAFKA_NODE_ID: ${KAFKA_NODE_ID}
+      KAFKA_CONTROLLER_QUORUM_VOTERS: ${KAFKA_CONTROLLER_QUORUM_VOTERS}
       KAFKA_LISTENERS: ${KAFKA_LISTENERS}
-      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: ${KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR}
-      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: ${KAFKA_TRANSACTION_STATE_LOG_MIN_ISR}
-      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: ${KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR}
+      KAFKA_ADVERTISED_LISTENERS: ${KAFKA_ADVERTISED_LISTENERS}
+      KAFKA_CONTROLLER_LISTENER_NAMES: ${KAFKA_CONTROLLER_LISTENER_NAMES}
+      KAFKA_INTER_BROKER_LISTENER_NAME: ${KAFKA_INTER_BROKER_LISTENER_NAME}
       KAFKA_LOG_DIRS: ${KAFKA_LOG_DIRS}
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: ${KAFKA_AUTO_CREATE_TOPICS_ENABLE}
+      # Zookeeper OLD
+      #KAFKA_BROKER_ID: ${KAFKA_BROKER_ID}
+      #KAFKA_ZOOKEEPER_CONNECT: ${KAFKA_ZOOKEEPER_CONNECT}
+      #KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: ${KAFKA_LISTENER_SECURITY_PROTOCOL_MAP}
+      #KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: ${KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR}
+      #KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: ${KAFKA_TRANSACTION_STATE_LOG_MIN_ISR}
+      #KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: ${KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR}
+      #KAFKA_LOG_DIRS: ${KAFKA_LOG_DIRS}
     volumes:
-      - kafka_data:/var/lib/kafka/data
+      - kafka_data:/tmp/kraft-combined-logs
+      #- kafka_data:/var/lib/kafka/data
 
   ### ZooKeeper
-  zookeeper:
-    hostname: zookeeper
-    container_name: zookeeper
-    image: "confluentinc/cp-zookeeper:${ZOOKEEPER_VERSION}"
-    restart: unless-stopped
-    networks:
-      - spring
-    env_file:
-      - .env
-    environment:
-      ZOOKEEPER_CLIENT_PORT: ${ZOOKEEPER_CLIENT_PORT}
-      ZOOKEEPER_TICK_TIME: ${ZOOKEEPER_TICK_TIME}
-      ZOOKEEPER_DATA_DIR: ${ZOOKEEPER_DATA_DIR}
-      ZOOKEEPER_DATA_LOG_DIR: ${ZOOKEEPER_DATA_LOG_DIR}
+#  zookeeper:
+#    hostname: zookeeper
+#    container_name: zookeeper
+#    image: "confluentinc/cp-zookeeper:${ZOOKEEPER_VERSION}"
+#    restart: unless-stopped
+#    networks:
+#      - spring
+#    env_file:
+#      - .env
+#    environment:
+#      ZOOKEEPER_CLIENT_PORT: ${ZOOKEEPER_CLIENT_PORT}
+#      ZOOKEEPER_TICK_TIME: ${ZOOKEEPER_TICK_TIME}
+#      ZOOKEEPER_DATA_DIR: ${ZOOKEEPER_DATA_DIR}
+#      ZOOKEEPER_DATA_LOG_DIR: ${ZOOKEEPER_DATA_LOG_DIR}
   
   redis:
     image: redis:7-alpine
